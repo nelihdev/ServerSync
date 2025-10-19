@@ -102,12 +102,27 @@ public class HealthCheckTask implements Runnable {
                 continue;
             }
 
-            // Server is na grace period - moet nu echt online zijn
+            // Server is na grace period - check of ie ready is geworden
             if (!registrationHandler.isServerReady(serverName)) {
-                // Server is niet klaar na grace period - verwijder!
-                logger.warning(String.format("Server %s is niet klaar na grace period - wordt verwijderd", serverName));
-                registrationHandler.unregisterServer(serverName);
-                removedServers++;
+                // EXTRA CHECK: Probeer nog één keer te pingen voordat we verwijderen
+                // Dit voorkomt race conditions waar de server net ready wordt
+                serverInfo.ping((result, error) -> {
+                    if (error == null && result != null) {
+                        // Server reageert! Mark als ready in plaats van verwijderen
+                        registrationHandler.markServerReady(serverName);
+                        logger.info(String.format("✓ Server %s werd net ready (ping succesvol vlak voor verwijdering)", serverName));
+
+                        int playerCount = result.getPlayers().getOnline();
+                        publishPlayerCount(serverName, playerCount);
+                    } else {
+                        // Server reageert echt niet - nu pas verwijderen
+                        logger.warning(String.format("Server %s is niet klaar na grace period en reageert niet op ping - wordt verwijderd", serverName));
+                        registrationHandler.unregisterServer(serverName);
+                    }
+                });
+
+                // Tellen als grace period (we geven 1 extra kans)
+                gracePeriodActive++;
                 continue;
             }
 

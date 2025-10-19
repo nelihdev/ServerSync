@@ -259,10 +259,13 @@ public class ServerRegistrationHandler {
                 // Ping server
                 serverInfo.ping((result, error) -> {
                     if (error == null && result != null) {
-                        // Success! Server is ready
-                        markServerReady(serverName);
-                        logger.info(String.format("✓✓ FAST DETECTION: %s is ready after ~%d seconds!",
-                                serverName, attempts.get() * 2));
+                        // Check again if server is already ready (prevent duplicate logs)
+                        if (!readyServers.contains(serverName)) {
+                            // Success! Server is ready
+                            markServerReady(serverName);
+                            logger.info(String.format("✓✓ FAST DETECTION: %s is ready after ~%d seconds!",
+                                    serverName, attempts.get() * 2));
+                        }
                     }
                 });
 
