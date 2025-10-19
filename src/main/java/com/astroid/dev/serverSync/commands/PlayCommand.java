@@ -38,15 +38,14 @@ public class PlayCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be used by players!");
+            sender.sendMessage(ChatColor.RED + "\u2716 " + ChatColor.BOLD + "Error! " + ChatColor.RED + "Only players can use this command!");
             return;
         }
 
         ProxiedPlayer player = (ProxiedPlayer) sender;
 
         if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "Usage: /play <minigame>");
-            player.sendMessage(ChatColor.GRAY + "Available minigames: bedwars, skywars, tntrun, spleef, paintball, arcade");
+            sendGameMenu(player);
             return;
         }
 
@@ -56,13 +55,15 @@ public class PlayCommand extends Command {
         List<ServerInfo> availableServers = findServersForMinigame(minigameType);
 
         if (availableServers.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "There are currently no " + minigameType + " servers available.");
+            player.sendMessage("");
+            player.sendMessage(ChatColor.RED + "\u2716 " + ChatColor.BOLD + "Error! " + ChatColor.RED + "No " + formatMinigameName(minigameType) + " servers are available right now.");
 
             // Auto-spawn request if enabled
             if (autoSpawnOnFull && rabbitMQManager.isConnected()) {
                 sendSpawnRequest(minigameType, 8); // Default 8 players
-                player.sendMessage(ChatColor.YELLOW + "A new server is being started, please try again shortly...");
+                player.sendMessage(ChatColor.YELLOW + "\u26A1 A new server is starting up! Please try again shortly...");
             }
+            player.sendMessage("");
             return;
         }
 
@@ -70,16 +71,57 @@ public class PlayCommand extends Command {
         ServerInfo targetServer = selectBestServer(availableServers);
 
         if (targetServer == null) {
-            player.sendMessage(ChatColor.RED + "No suitable server found.");
+            player.sendMessage("");
+            player.sendMessage(ChatColor.RED + "\u2716 " + ChatColor.BOLD + "Error! " + ChatColor.RED + "Unable to find a suitable server.");
+            player.sendMessage("");
             return;
         }
 
-        // Check if server is full
-        int currentPlayers = targetServer.getPlayers().size();
-
         // Connect player to server
-        player.sendMessage(ChatColor.GREEN + "Connecting to " + minigameType + " server...");
+        player.sendMessage("");
+        player.sendMessage(ChatColor.GREEN + "\u27A4 " + ChatColor.BOLD + "Sending you to " + formatMinigameName(minigameType) + "!");
+        player.sendMessage("");
         player.connect(targetServer);
+    }
+
+    /**
+     * Send game menu to player
+     */
+    private void sendGameMenu(CommandSender sender) {
+        sender.sendMessage(ChatColor.GREEN + "\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC");
+        sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "                    Available Games");
+        sender.sendMessage("");
+        sender.sendMessage(ChatColor.YELLOW + "/play bedwars " + ChatColor.GRAY + "\u00BB " + ChatColor.WHITE + "Defend your bed and destroy enemies!");
+        sender.sendMessage(ChatColor.YELLOW + "/play skywars " + ChatColor.GRAY + "\u00BB " + ChatColor.WHITE + "Battle on floating islands!");
+        sender.sendMessage(ChatColor.YELLOW + "/play tntrun " + ChatColor.GRAY + "\u00BB " + ChatColor.WHITE + "Don't stop running or you'll fall!");
+        sender.sendMessage(ChatColor.YELLOW + "/play spleef " + ChatColor.GRAY + "\u00BB " + ChatColor.WHITE + "Break blocks and make others fall!");
+        sender.sendMessage(ChatColor.YELLOW + "/play paintball " + ChatColor.GRAY + "\u00BB " + ChatColor.WHITE + "Shoot your opponents with paint!");
+        sender.sendMessage(ChatColor.YELLOW + "/play arcade " + ChatColor.GRAY + "\u00BB " + ChatColor.WHITE + "Random fun minigames!");
+        sender.sendMessage("");
+        sender.sendMessage(ChatColor.GRAY + "Select a game to join!");
+        sender.sendMessage(ChatColor.GREEN + "\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC");
+    }
+
+    /**
+     * Format minigame name for display
+     */
+    private String formatMinigameName(String minigameType) {
+        switch (minigameType.toLowerCase()) {
+            case "bedwars":
+                return "Bed Wars";
+            case "skywars":
+                return "Sky Wars";
+            case "tntrun":
+                return "TNT Run";
+            case "spleef":
+                return "Spleef";
+            case "paintball":
+                return "Paintball";
+            case "arcade":
+                return "Arcade";
+            default:
+                return minigameType.substring(0, 1).toUpperCase() + minigameType.substring(1);
+        }
     }
 
     /**
