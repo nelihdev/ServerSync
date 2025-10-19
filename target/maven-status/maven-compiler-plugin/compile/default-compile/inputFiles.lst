@@ -1,0 +1,10 @@
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\commands\PlayCommand.java
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\commands\ServerSyncCommand.java
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\discord\DiscordWebhook.java
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\handlers\ServerRegistrationHandler.java
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\pterodactyl\PterodactylApiClient.java
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\rabbitmq\RabbitMQManager.java
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\redis\RedisManager.java
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\ServerSync.java
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\sync\ServerSynchronizer.java
+C:\Users\Stijn Jakobs\IdeaProjects\ServerSync\src\main\java\com\astroid\dev\serverSync\tasks\HealthCheckTask.java

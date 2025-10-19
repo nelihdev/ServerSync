@@ -1,0 +1,8 @@
+name: ServerSync
+version: '1.0-SNAPSHOT'
+main: com.astroid.dev.serverSync.ServerSync
+description: A BungeeCord plugin to synchronize server states with a central management system using Redis and RabbitMQ.
+authors:
+  - Stijn Jakobs
+  - AstroidMC
+  - Hypixel Dev Team

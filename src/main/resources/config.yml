@@ -1,0 +1,97 @@
+# ServerSync Configuration
+
+# Proxy Identification (IMPORTANT for multi-proxy setups!)
+# Each proxy MUST have a unique ID for accurate player counting
+proxy:
+  id: "proxy-1"  # Change to "proxy-2", "proxy-3", etc. for other proxies
+  # Optional: friendly name for logging
+  name: "EU-Proxy-1"
+
+redis:
+  host: "91.98.71.248"
+  port: 6379
+  password: "R3d!sP@ssw0rd9X7zQ"
+  timeout: 2000
+
+# RabbitMQ Configuration
+rabbitmq:
+  host: "91.98.28.73"
+  port: 5672
+  username: "mcuser"
+  password: "mcpass"
+  enabled: true
+  queues:
+    server-ready: "server_ready"
+    server-empty: "server_empty"
+    spawn-request: "spawn_request"
+    player-count: "player_count"  # Player count updates (per proxy)
+
+# Discord Webhook Configuration
+discord:
+  enabled: true  # Set to true to enable Discord logging
+  webhook-url: "https://discord.com/api/webhooks/1429460057132630156/OUBB4kC7A16abm9aafW-y2FfMuf1dPi9uvV3KBsUr7YdOubVul3NTkiKhBdc5xoidBAJ"
+  bot-name: "ServerSync"
+  bot-avatar: "https://i.imgur.com/4M34hi2.png"  # Optional custom avatar
+  # What to log to Discord
+  log-events:
+    startup: true
+    shutdown: true
+    server-registered: true
+    server-unregistered: true
+    server-ready: true
+    health-check: false  # Set to true to log periodic health checks
+    errors: true
+    warnings: true
+
+# Pterodactyl API Configuration
+pterodactyl:
+  enabled: true
+  panel-url: "https://panel.prismblocks.nl"
+  api-key: "ptla_L5EuvgaRGh8O7R6rQ9ti1E32Xfp93iaBQ26IxjNrrJs"
+  node-id: 1
+  # Fallback IP voor servers (Docker bridge network)
+  default-ip: "172.18.0.1"
+  # Fallback port range als Pterodactyl API niet bereikbaar is
+  default-port-range:
+    start: 25565
+    end: 25665
+
+# Synchronisatie interval in seconden
+sync-interval: 5
+
+# Health check interval in seconden (verlaagd voor snellere server readiness detectie)
+health-check-interval: 10
+
+# Redis key patterns voor verschillende minigame types
+# De plugin zoekt naar deze keys in Redis
+server-keys:
+  - "minecraft:servers:bedwars"
+  - "minecraft:servers:skywars"
+  - "minecraft:servers:tntrun"
+  - "minecraft:servers:spleef"
+  - "minecraft:servers:paintball"
+  - "minecraft:servers:arcade"
+
+# Server registration settings
+registration:
+  # Automatisch servers registreren bij startup
+  auto-register: true
+  # Server naam formaat: {minigame_type}-{server_id}
+  name-format: "{type}-{id}"
+  # MOTD formaat
+  motd-format: "{type} Arena #{id}"
+  # Servers zijn publiekelijk toegankelijk
+  restricted: false
+
+# Load balancing settings
+load-balancing:
+  enabled: true
+  # Strategy: LEAST_PLAYERS, RANDOM, ROUND_ROBIN
+  strategy: "LEAST_PLAYERS"
+  # Automatisch spawn request sturen als alle servers vol zijn
+  auto-spawn-on-full: true
+
+# Logging opties
+logging:
+  enabled: true
+  verbose: false
